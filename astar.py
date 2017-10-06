@@ -12,14 +12,16 @@ class Grafo:
 		self.nos.append(no)
 
 class no:
-	def __init__(self, nome):
+	def __init__(self, nome, hcost):
 		self.direita = None
 		self.esquerda = None
 		self.aspira = None
-		self.arestas = [self.direita, self.esquerda, self.aspira]
+		self.arestas = None
 		self.final = False
 		self.nome = nome
 		self.custo = 1
+		self.hcost = hcost
+		self.inicial = False
 
 	def set_meta(self):
 		self.final = True
@@ -29,19 +31,22 @@ class no:
 		self.direita = no_direita
 		self.esquerda = no_esquerda
 		self.aspira = no_aspira
+		self.arestas = [self.direita, self.esquerda, self.aspira]
 
 grafo = Grafo()
 #no inicial comeca na direita com os dois comodos sujos 
-estado_inicial_s0 = no("s0")
-s1 = no("s1")
-s2 = no("s2")
-s3_final = no("s3")
+#inicializando nos com nome e custo ate o no final
+estado_inicial_s0 = no("s0", 999)
+estado_inicial_s0.inicial = True
+s1 = no("s1", 2)
+s2 = no("s2", 1)
+s3_final = no("s3", 0)
 s3_final.set_meta()
-s4 = no("s4")
-s5 = no("s5")
-s6_final = no("s6")
+s4 = no("s4", 3)
+s5 = no("s5", 1)
+s6_final = no("s6", 0)
 s6_final.set_meta()
-s7 = no("s7")
+s7 = no("s7", 2)
 
 estado_inicial_s0.put_arestas(estado_inicial_s0, s4, s1)
 s1.put_arestas(s1, s5, s1)
@@ -62,11 +67,19 @@ grafo.put_no(s6_final)
 grafo.put_no(s7)
 
 
-custo_caminhos = {}
+
 custo_caminho = 0
 already_visited = []
 fila_prioridade = []
 fila_prioridades = []
+fcost = 0
+gcost = 0
+hcost = 0
+lista_custos = []
+lista_nos = []
+custo = 0
+adjacentes = []
+
 
 global globfound
 globfound = False
@@ -78,27 +91,41 @@ def eh_vazio(lista):
 		return False
 
 
+global custo_caminho
+custo_caminho = 0
 
 nos = grafo.get_nos()
 
 def astar_search(no):
+	global custo_caminho
+
+	if no.final == True:
+		print "achou"
+		print custo_caminho
+		return True
+
 	already_visited.append(no)
-	fila_prioridades.append(no.arestas)
-	print no.arestas
-	for sublist in fila_prioridades:
+	adjacentes.append(no.arestas)
+	for sublist in adjacentes:
 		for item in sublist:
 			fila_prioridade.append(item)
-	print fila_prioridade
 
-	while not eh_vazio(fila_prioridade):
-		no = fila_prioridade.pop()
-		if no.final == True:
-			print "achou"
-			print custo_caminho
-			return no
-		else:
-			custo_caminho = custo_caminho + no.custo
-			astar_search(no)
+	while len(fila_prioridade) != 0:
+		calcula_no = fila_prioridade.pop()
+		print calcula_no.hcost
+		custo = calcula_no.hcost
+		lista_custos.append(custo)
+		lista_nos.append(calcula_no)
+		already_visited.append(calcula_no)
+
+	menor_custo = min(lista_custos)
+	indice_no = lista_custos.index(menor_custo)
+	no_menor_custo = lista_nos[indice_no]
+	custo_caminho = menor_custo + custo_caminho
+	astar_search(no_menor_custo)
+
+
+
 
 astar_search(estado_inicial_s0)
 
