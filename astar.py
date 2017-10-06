@@ -122,6 +122,7 @@ def astar_search(no):
 	indice_no = lista_custos.index(menor_custo)
 	no_menor_custo = lista_nos[indice_no]
 	custo_caminho = menor_custo + custo_caminho
+	print no_menor_custo.nome
 	astar_search(no_menor_custo)
 
 
