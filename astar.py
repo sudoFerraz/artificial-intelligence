@@ -12,13 +12,13 @@ class Grafo:
 		self.nos.append(no)
 
 class no:
-	def __init__(self):
+	def __init__(self, nome):
 		self.direita = None
 		self.esquerda = None
 		self.aspira = None
 		self.arestas = [self.direita, self.esquerda, self.aspira]
 		self.final = False
-		self.cost = 1
+		self.nome = nome
 
 	def set_meta(self):
 		self.final = True
@@ -33,16 +33,16 @@ class no:
 
 grafo = Grafo()
 #no inicial comeca na direita com os dois comodos sujos 
-estado_inicial_s0 = no()
-s1 = no()
-s2 = no()
-s3_final = no()
+estado_inicial_s0 = no("s0")
+s1 = no("s1")
+s2 = no("s2")
+s3_final = no("s3")
 s3_final.set_meta()
-s4 = no()
-s5 = no()
-s6_final = no()
+s4 = no("s4")
+s5 = no("s5")
+s6_final = no("s6")
 s6_final.set_meta()
-s7 = no()
+s7 = no("s7")
 
 estado_inicial_s0.put_arestas(estado_inicial_s0, s4, s1)
 s1.put_arestas(s1, s5, s1)
@@ -66,6 +66,7 @@ grafo.put_no(s7)
 esq_visited = []
 dir_visited = []
 aspira_visited = []
+custo_caminhos = {}
 
 global globfound
 globfound = False
@@ -77,7 +78,9 @@ globfound = False
 nos = grafo.get_nos()
 
 def busca_profundidade(no):
+	print no.nome
 	global globfound
+
 	if globfound:
 		return True
 

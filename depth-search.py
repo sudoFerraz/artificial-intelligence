@@ -18,7 +18,6 @@ class no:
 		self.aspira = None
 		self.arestas = [self.direita, self.esquerda, self.aspira]
 		self.final = False
-		self.cost = 1
 		self.nome = nome
 
 	def set_meta(self):
@@ -80,7 +79,7 @@ nos = grafo.get_nos()
 def busca_profundidade(no):
 	print no.nome
 	global globfound
-	
+
 	if globfound:
 		return True
 
