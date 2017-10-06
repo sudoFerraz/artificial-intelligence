@@ -19,12 +19,11 @@ class no:
 		self.arestas = [self.direita, self.esquerda, self.aspira]
 		self.final = False
 		self.nome = nome
+		self.custo = 1
 
 	def set_meta(self):
 		self.final = True
 
-	def get_arestas(self):
-		return self.aresta
 
 	def put_arestas(self, no_direita, no_esquerda, no_aspira):
 		self.direita = no_direita
@@ -63,45 +62,49 @@ grafo.put_no(s6_final)
 grafo.put_no(s7)
 
 
-esq_visited = []
-dir_visited = []
-aspira_visited = []
 custo_caminhos = {}
+custo_caminho = 0
+already_visited = []
+fila_prioridade = []
+fila_prioridades = []
 
 global globfound
 globfound = False
 
-
+def eh_vazio(lista):
+	if len(lista) == 0:
+		return True
+	else:
+		return False
 
 
 
 nos = grafo.get_nos()
 
-def busca_profundidade(no):
-	print no.nome
-	global globfound
+def astar_search(no):
+	already_visited.append(no)
+	fila_prioridades.append(no.arestas)
+	print no.arestas
+	for sublist in fila_prioridades:
+		for item in sublist:
+			fila_prioridade.append(item)
+	print fila_prioridade
 
-	if globfound:
-		return True
+	while not eh_vazio(fila_prioridade):
+		no = fila_prioridade.pop()
+		if no.final == True:
+			print "achou"
+			print custo_caminho
+			return no
+		else:
+			custo_caminho = custo_caminho + no.custo
+			astar_search(no)
 
-	if no.final == True:
-		print "Achou final"
-		globfound = True
-		return True
+astar_search(estado_inicial_s0)
 
 
-	else:
-		if no not in esq_visited:
-			esq_visited.append(no)
-			busca_profundidade(no.esquerda)
-		if no not in dir_visited:
-			dir_visited.append(no)
-			busca_profundidade(no.direita)
-		if no not in aspira_visited:
-			aspira_visited.append(no)
-			busca_profundidade(no.aspira)
 
-find = busca_profundidade(nos[0])
+
 
 
 
